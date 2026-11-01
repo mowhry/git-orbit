@@ -1,0 +1,22 @@
+name: Test Git Orbit
+on:
+  push:
+  pull_request:
+permissions:
+  contents: read
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+      - run: npm ci --ignore-scripts
+      - run: npm test
+      - run: npm run demo
+      - name: Check reproducible assets and examples
+        run: |
+          npm run assets
+          git diff --exit-code -- assets/earth assets/satellites assets/effects src/renderer/assets.generated.ts examples/constellations

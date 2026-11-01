@@ -48,6 +48,7 @@ test('missing accounts, bad tokens and rate limits have distinct failures', asyn
     [Response.json({}, { status: 401 }), 'auth'],
     [Response.json({}, { status: 403, headers: { 'x-ratelimit-remaining': '0' } }), 'rate_limited'],
     [Response.json({ errors: [{ type: 'RATE_LIMITED' }] }), 'rate_limited'],
+    [Response.json(null), 'unavailable'],
   ];
   for (const [response, code] of responses) await assert.rejects(
     collectActivity('mowhry', { token: 'test', fetch: async () => response }),

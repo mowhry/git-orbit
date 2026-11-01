@@ -1,0 +1,11 @@
+__pycache__/
+.venv/
+*.pyc
+.pytest_cache/
+node_modules/
+dist/
+.cache/
+.env
+.env.*
+!.env.example
+orbit.svg

@@ -13,16 +13,20 @@ export interface SnapshotStore {
 export class FileSnapshotStore implements SnapshotStore {
   constructor(private readonly directory: string) {}
   async read(username: string): Promise<ActivitySnapshot | undefined> {
+    username = validateUsername(username);
+    let raw: string;
     try {
-      const data = JSON.parse(await readFile(join(this.directory, `${validateUsername(username)}.json`), 'utf8')) as ActivitySnapshot;
-      if (data.version !== 1 || data.username !== username || !Number.isFinite(Date.parse(data.fetchedAt))) return undefined;
-      return { ...data, activity: normalizeActivity(data.activity) };
+      raw = await readFile(join(this.directory, `${username}.json`), 'utf8');
     } catch (error) {
-      if ((error as NodeJS.ErrnoException).code === 'ENOENT' || error instanceof SyntaxError) return undefined;
-      // A malformed cached snapshot is not a valid fallback, but permission/disk errors remain visible.
-      if (error instanceof Error && error.message.startsWith('Activity field')) return undefined;
+      if ((error as NodeJS.ErrnoException).code === 'ENOENT') return undefined;
       throw error;
     }
+    // A malformed cache entry can be rebuilt; filesystem permission errors cannot.
+    try {
+      const data = JSON.parse(raw) as ActivitySnapshot;
+      if (data?.version !== 1 || data.username !== username || !Number.isFinite(Date.parse(data.fetchedAt))) return undefined;
+      return { ...data, activity: normalizeActivity(data.activity) };
+    } catch { return undefined; }
   }
   async write(snapshot: ActivitySnapshot): Promise<void> {
     await mkdir(this.directory, { recursive: true });

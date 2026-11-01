@@ -64,6 +64,8 @@ export async function collectActivity(rawUsername: string, options: CollectorOpt
     let body: { data?: T; errors?: { type?: string }[] };
     try { body = await response.json() as typeof body; }
     catch { throw new GitHubError('GitHub returned invalid JSON.', 'unavailable'); }
+    if (!body || typeof body !== 'object' || (body.errors !== undefined && !Array.isArray(body.errors)))
+      throw new GitHubError('GitHub returned invalid response data.', 'unavailable');
     if (body.errors?.length) {
       const types = body.errors.map(e => e.type);
       if (types.includes('NOT_FOUND')) throw new GitHubError('GitHub user not found.', 'not_found');
@@ -105,9 +107,13 @@ export async function collectActivity(rawUsername: string, options: CollectorOpt
     pullRequests += apiCount(collection?.totalPullRequestContributions);
     reviews += apiCount(collection?.totalPullRequestReviewContributions);
     if (!Array.isArray(collection?.contributionCalendar?.weeks)) throw new GitHubError('GitHub returned no calendar.', 'unavailable');
-    for (const week of collection.contributionCalendar.weeks) for (const day of week.contributionDays) {
+    for (const week of collection.contributionCalendar.weeks) {
+      if (!Array.isArray(week?.contributionDays)) throw new GitHubError('GitHub returned an incomplete calendar.', 'unavailable');
+      for (const day of week.contributionDays) {
+      if (!day || typeof day.date !== 'string') throw new GitHubError('GitHub returned an invalid calendar day.', 'unavailable');
       if (!/^\d{4}-\d{2}-\d{2}$/.test(day.date)) throw new GitHubError('GitHub returned an invalid calendar date.', 'unavailable');
       if (day.date >= window.from.slice(0, 10) && day.date <= window.to.slice(0, 10)) days.set(day.date, apiCount(day.contributionCount));
+      }
     }
   }
   const activity = normalizeActivity({ commits, pullRequests, reviews, starsReceived,

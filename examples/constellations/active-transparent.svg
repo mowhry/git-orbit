@@ -14,7 +14,7 @@
 <use href="#satellite-tier-2" width="34" height="24"/>
 <rect x="18" y="11" width="1" height="1" fill="#a8f2de" class="led"/>
 
-<use href="#signal" x="18" y="0" width="6" height="6" color="#a8f2de" class="radio" style="animation-delay:-0s"/>
+<use href="#signal" x="18" y="0" width="6" height="6" color="#a8f2de" opacity="0" class="radio" style="animation-delay:-0s"/>
 </g></g><g class="flight-1" transform="translate(137 92)"><g transform="translate(-17 -12)">
 <use href="#satellite-tier-2" width="34" height="24"/>
 <rect x="18" y="11" width="1" height="1" fill="#a8f2de" class="led"/>
@@ -29,7 +29,7 @@
 <use href="#satellite-tier-2" width="34" height="24"/>
 <rect x="18" y="11" width="1" height="1" fill="#a8f2de" class="led"/>
 <rect x="13" y="14" width="1" height="2" fill="#e8bd73"/>
-<use href="#signal" x="18" y="0" width="6" height="6" color="#a8f2de" class="radio" style="animation-delay:-3s"/>
+<use href="#signal" x="18" y="0" width="6" height="6" color="#a8f2de" opacity="0" class="radio" style="animation-delay:-3s"/>
 </g></g><g class="flight-4" transform="translate(263 108)"><g transform="translate(-17 -12)">
 <use href="#satellite-tier-1" width="34" height="24"/>
 <rect x="18" y="11" width="1" height="1" fill="#a8f2de" class="led"/>
@@ -44,7 +44,7 @@
 <use href="#satellite-tier-2" width="34" height="24"/>
 <rect x="18" y="11" width="1" height="1" fill="#a8f2de" class="led"/>
 
-<use href="#signal" x="18" y="0" width="6" height="6" color="#a8f2de" class="radio" style="animation-delay:-6s"/>
+<use href="#signal" x="18" y="0" width="6" height="6" color="#a8f2de" opacity="0" class="radio" style="animation-delay:-6s"/>
 </g></g><g class="flight-7" transform="translate(138 66)"><g transform="translate(-17 -12)">
 <use href="#satellite-tier-2" width="34" height="24"/>
 <rect x="18" y="11" width="1" height="1" fill="#a8f2de" class="led"/>
@@ -57,7 +57,7 @@
 <use href="#satellite-tier-2" width="34" height="24"/>
 <rect x="18" y="11" width="1" height="1" fill="#a8f2de" class="led"/>
 
-<use href="#signal" x="18" y="0" width="6" height="6" color="#a8f2de" class="radio" style="animation-delay:-0s"/>
+<use href="#signal" x="18" y="0" width="6" height="6" color="#a8f2de" opacity="0" class="radio" style="animation-delay:-0s"/>
 </g></g><g class="flight-1" transform="translate(137 92)"><g transform="translate(-17 -12)">
 <use href="#satellite-tier-2" width="34" height="24"/>
 <rect x="18" y="11" width="1" height="1" fill="#a8f2de" class="led"/>
@@ -72,7 +72,7 @@
 <use href="#satellite-tier-2" width="34" height="24"/>
 <rect x="18" y="11" width="1" height="1" fill="#a8f2de" class="led"/>
 <rect x="13" y="14" width="1" height="2" fill="#e8bd73"/>
-<use href="#signal" x="18" y="0" width="6" height="6" color="#a8f2de" class="radio" style="animation-delay:-3s"/>
+<use href="#signal" x="18" y="0" width="6" height="6" color="#a8f2de" opacity="0" class="radio" style="animation-delay:-3s"/>
 </g></g><g class="flight-4" transform="translate(263 108)"><g transform="translate(-17 -12)">
 <use href="#satellite-tier-1" width="34" height="24"/>
 <rect x="18" y="11" width="1" height="1" fill="#a8f2de" class="led"/>
@@ -87,7 +87,7 @@
 <use href="#satellite-tier-2" width="34" height="24"/>
 <rect x="18" y="11" width="1" height="1" fill="#a8f2de" class="led"/>
 
-<use href="#signal" x="18" y="0" width="6" height="6" color="#a8f2de" class="radio" style="animation-delay:-6s"/>
+<use href="#signal" x="18" y="0" width="6" height="6" color="#a8f2de" opacity="0" class="radio" style="animation-delay:-6s"/>
 </g></g><g class="flight-7" transform="translate(138 66)"><g transform="translate(-17 -12)">
 <use href="#satellite-tier-2" width="34" height="24"/>
 <rect x="18" y="11" width="1" height="1" fill="#a8f2de" class="led"/>

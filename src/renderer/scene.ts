@@ -23,7 +23,7 @@ function satellite(s: Satellite, state: OrbitState, animate: boolean): string {
 <use href="#satellite-tier-${s.tier}" width="34" height="24"/>
 <rect x="18" y="11" width="1" height="1" fill="${led}"${animate ? ' class="led"' : ''}/>
 ${s.variant === 1 ? '<rect x="13" y="14" width="1" height="2" fill="#e8bd73"/>' : ''}
-${animate && state.activityLevel >= 2 && s.id % 3 === 0 ? `<use href="#signal" x="18" y="0" width="6" height="6" color="${led}" class="radio" style="animation-delay:-${s.id}s"/>` : ''}
+${animate && state.activityLevel >= 2 && s.id % 3 === 0 ? `<use href="#signal" x="18" y="0" width="6" height="6" color="${led}" opacity="0" class="radio" style="animation-delay:-${s.id}s"/>` : ''}
 </g></g>`;
 }
 
@@ -46,6 +46,7 @@ function communications(satellites: Satellite[], level: number, activity: number
 }
 
 export function renderScene(username: string, state: OrbitState, options: RenderOptions = {}): string {
+  username = username.toLowerCase();
   if (!Number.isInteger(state.satelliteCount) || state.satelliteCount < 1 || state.satelliteCount > 24
     || !Number.isInteger(state.orbitCount) || state.orbitCount < 1 || state.orbitCount > 4
     || !Number.isInteger(state.orbitCapacity) || state.orbitCapacity < 1 || state.orbitCapacity > 6
@@ -54,6 +55,8 @@ export function renderScene(username: string, state: OrbitState, options: Render
     || !Number.isInteger(state.starDensity) || state.starDensity < 0 || state.starDensity > 5) {
     throw new Error('Invalid constellation state.');
   }
+  if (![state.activityLevel, state.communicationLevel].every(n => Number.isInteger(n) && n >= 0 && n <= 3))
+    throw new Error('Invalid constellation effects.');
   const theme = options.theme ?? 'transparent', animate = options.animation ?? true;
   if (!(theme in colors)) throw new Error('Theme must be transparent, dark or light.');
   const palette = colors[theme];

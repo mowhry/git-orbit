@@ -1,0 +1,45 @@
+name: Git Orbit
+description: Grow a deterministic pixel-art constellation from a GitHub profile.
+branding:
+  icon: globe
+  color: blue
+inputs:
+  username:
+    description: GitHub account to draw.
+    default: ${{ github.repository_owner }}
+  github-token:
+    description: Token for the GitHub GraphQL API.
+    default: ${{ github.token }}
+  output-dir:
+    description: Directory for orbit.svg, orbit-static.svg and persistent activity history.
+    default: output
+  theme:
+    description: transparent, dark or light.
+    default: transparent
+runs:
+  using: composite
+  steps:
+    - uses: actions/setup-node@v4
+      with:
+        node-version: '22'
+    - name: Build Git Orbit
+      shell: bash
+      working-directory: ${{ github.action_path }}
+      run: |
+        npm ci --ignore-scripts
+        npm run build
+    - name: Generate constellation
+      shell: bash
+      env:
+        ORBIT_ACTION_PATH: ${{ github.action_path }}
+        ORBIT_OUTPUT_DIR: ${{ inputs.output-dir }}
+        ORBIT_USERNAME: ${{ inputs.username }}
+        ORBIT_THEME: ${{ inputs.theme }}
+        GITHUB_TOKEN: ${{ inputs.github-token }}
+      run: |
+        node "$ORBIT_ACTION_PATH/dist/src/cli.js" "$ORBIT_USERNAME" \
+          --theme "$ORBIT_THEME" --refresh --cache "$ORBIT_OUTPUT_DIR/.orbit-state" \
+          --output "$ORBIT_OUTPUT_DIR/orbit.svg"
+        node "$ORBIT_ACTION_PATH/dist/src/cli.js" "$ORBIT_USERNAME" \
+          --theme "$ORBIT_THEME" --static --cache "$ORBIT_OUTPUT_DIR/.orbit-state" \
+          --output "$ORBIT_OUTPUT_DIR/orbit-static.svg"

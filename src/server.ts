@@ -29,12 +29,14 @@ export function createOrbitServer(service = new ActivityService(collectActivity,
     let svg: string;
     let source = 'demo';
     let errorCode = '';
+    let validRequest = false;
     try {
       const username = validateUsername(url.searchParams.get('username') ?? '');
       const theme = url.searchParams.get('theme') ?? 'transparent';
       const animation = url.searchParams.get('animation') ?? 'true';
       if (!['transparent', 'dark', 'light'].includes(theme)) throw new Error('Unknown theme');
       if (!['true', 'false'].includes(animation)) throw new Error('Unknown animation option');
+      validRequest = true;
       let activity = demoActivity;
       if (url.pathname === '/api/orbit') {
         const result = await service.get(username);
@@ -43,7 +45,7 @@ export function createOrbitServer(service = new ActivityService(collectActivity,
       }
       svg = renderScene(username, calculateOrbitState(activity), { theme: theme as Theme, animation: animation === 'true' });
     } catch (error) {
-      errorCode = error instanceof GitHubError ? error.code : 'invalid_request';
+      errorCode = error instanceof GitHubError ? error.code : validRequest ? 'unavailable' : 'invalid_request';
       svg = renderError(errorCode === 'not_found' ? 'No signal — user not found'
         : errorCode === 'invalid_request' ? 'No signal — check the image URL' : 'No signal — GitHub unavailable');
     }

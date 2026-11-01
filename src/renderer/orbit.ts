@@ -16,8 +16,9 @@ export function createSatellites(username: string, state: OrbitState): Satellite
   return Array.from({ length: state.satelliteCount }, (_, id) => {
     const orbitIndex = Math.min(state.orbitCount - 1, Math.floor(id / capacity));
     const rng = makeRng(`${username}:orbit:${orbitIndex}`);
-    const phase = rng() * TAU;
     const occupants = Math.min(capacity, state.satelliteCount - orbitIndex * capacity);
+    // A lone satellite starts in front of Earth, so even the static seed is visible.
+    const phase = rng() * (occupants === 1 ? Math.PI : TAU);
     const ownRng = makeRng(`${username}:satellite:${id}`);
     return {
       id, orbitIndex, angle: phase + (id % capacity) * TAU / occupants,

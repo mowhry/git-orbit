@@ -41,5 +41,7 @@ test('file cache persists and corrupt JSON is ignored', async () => {
     assert.equal(await store.read('mowhry'), undefined);
     await store.write(snapshot); assert.deepEqual(await new FileSnapshotStore(dir).read('mowhry'), snapshot);
     await writeFile(join(dir, 'mowhry.json'), '{broken'); assert.equal(await store.read('mowhry'), undefined);
+    await writeFile(join(dir, 'mowhry.json'), JSON.stringify({ ...snapshot, activity: null }));
+    assert.equal(await store.read('mowhry'), undefined);
   } finally { await rm(dir, { recursive: true }); }
 });

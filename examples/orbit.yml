@@ -1,0 +1,30 @@
+# Copy to .github/workflows/orbit.yml when git-orbit is at the repository root.
+name: Grow my constellation
+on:
+  schedule:
+    - cron: '23 3 * * *'
+  workflow_dispatch:
+permissions:
+  contents: write
+concurrency:
+  group: git-orbit
+  cancel-in-progress: false
+jobs:
+  orbit:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ./
+        with:
+          username: ${{ github.repository_owner }}
+          output-dir: output
+      - name: Commit the constellation and its earned progress
+        shell: bash
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add -- output/orbit.svg output/orbit-static.svg output/.orbit-state
+          if ! git diff --cached --quiet; then
+            git commit -m 'chore: grow my constellation'
+            git push
+          fi
