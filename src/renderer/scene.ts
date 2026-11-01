@@ -1,6 +1,7 @@
 import type { OrbitState, RenderOptions, Satellite } from '../types.js';
 import { ASSETS } from './assets.generated.js';
-import { createSatellites, orbitPath, position, TAU } from './orbit.js';
+import { createSatellites, orbitPath, position, frontClipPath, ORBITS, TAU } from './orbit.js';
+import { earth, earthMotion } from './earth.js';
 import { stars } from './stars.js';
 import { escapeXml } from './svg.js';
 
@@ -8,7 +9,7 @@ const colors = { dark: { bg: '#090e1c', ink: '#7593b6' }, light: { bg: '#f5f6f8'
 
 function motion(s: Satellite, activity: number): string {
   const frames = Array.from({ length: 65 }, (_, i) => {
-    const { x, y } = position(s.orbitIndex, s.angle + TAU * i / 64);
+    const { x, y } = position(s.orbitIndex, s.angle + ORBITS[s.orbitIndex]!.direction * TAU * i / 64);
     return `${(i * 100 / 64).toFixed(4)}%{transform:translate(${x}px,${y}px)}`;
   }).join('');
   const duration = (1 / s.speed / (1 + activity * .06)).toFixed(2);
@@ -35,8 +36,8 @@ function communications(satellites: Satellite[], level: number, activity: number
     const frames: string[] = [];
     for (let i = 0; i <= 40; i++) {
       const time = i / 40 * 12;
-      const pa = position(a.orbitIndex, a.angle + time * a.speed * TAU * (1 + activity * .06));
-      const pb = position(b.orbitIndex, b.angle + time * b.speed * TAU * (1 + activity * .06));
+      const pa = position(a.orbitIndex, a.angle + time * a.speed * ORBITS[a.orbitIndex]!.direction * TAU * (1 + activity * .06));
+      const pb = position(b.orbitIndex, b.angle + time * b.speed * ORBITS[b.orbitIndex]!.direction * TAU * (1 + activity * .06));
       const t = Math.max(0, Math.min(1, (i / 40 - .55) / .3));
       frames.push(`${i * 2.5}%{transform:translate(${Math.round(pa.x + (pb.x - pa.x) * t)}px,${Math.round(pa.y + (pb.y - pa.y) * t)}px);opacity:${i > 22 && i < 34 ? '.6' : '0'}}`);
     }
@@ -62,8 +63,12 @@ export function renderScene(username: string, state: OrbitState, options: Render
   const palette = colors[theme];
   const satellites = createSatellites(username, state);
   const vehicles = satellites.map(s => satellite(s, state, animate)).join('');
+  const orbitIndices = Array.from({ length: state.orbitCount }, (_, i) => i);
+  const foreground = orbitIndices.map(i => `<g clip-path="url(#front-${i})">${orbitPath(i)}${satellites
+    .filter(s => s.orbitIndex === i).map(s => satellite(s, state, animate)).join('')}</g>`).join('');
   const animation = animate ? `<style>
 ${satellites.map(s => motion(s, state.activityLevel)).join('')}
+${earthMotion()}
 @keyframes twinkle{0%,100%{opacity:.25}50%{opacity:.7}}.twinkle{animation:twinkle 11s ease-in-out infinite}
 @keyframes led{0%,85%,100%{opacity:.85}90%{opacity:.3}}.led{animation:led 7s linear infinite}
 @keyframes radio{0%,78%,100%{opacity:0}85%{opacity:.5}}.radio{animation:radio 15s linear infinite}
@@ -71,14 +76,14 @@ ${satellites.map(s => motion(s, state.activityLevel)).join('')}
 </style>` : '';
   return `<svg xmlns="http://www.w3.org/2000/svg" width="800" height="400" viewBox="0 0 400 200" role="img" aria-labelledby="title desc" shape-rendering="crispEdges" style="image-rendering:pixelated;color:${palette.ink}">
 <title id="title">${escapeXml(username)}'s Git Orbit</title><desc id="desc">A pixel-art Earth with ${state.satelliteCount} satellites across ${state.orbitCount} orbital layers, grown from GitHub activity.</desc>
-<defs>${ASSETS}<clipPath id="front"><path d="M0 100h400v100H0z"/></clipPath></defs>
+<defs>${ASSETS}${orbitIndices.map(frontClipPath).join('')}</defs>
 ${animation}${palette.bg ? `<path fill="${palette.bg}" d="M0 0h400v200H0z"/>` : ''}
 ${stars(username, state.starDensity, animate)}
-${Array.from({ length: state.orbitCount }, (_, i) => orbitPath(i)).join('')}
+${orbitIndices.map(orbitPath).join('')}
 <g data-layer="back">${vehicles}</g>
 ${animate ? communications(satellites, state.communicationLevel, state.activityLevel) : ''}
-<use href="#earth" x="164" y="64" width="72" height="72"/>
-<g data-layer="front" clip-path="url(#front)">${vehicles}</g>
+${earth(animate)}
+<g data-layer="front">${foreground}</g>
 </svg>\n`;
 }
 

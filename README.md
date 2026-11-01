@@ -103,15 +103,21 @@ collecté, mais ne change pas la Terre dans cette version.
 ![Ma constellation GitHub](output/orbit.svg)
 ```
 
-Le SVG mesure **800 × 400**, avec un fond transparent par défaut. Les assets
-réutilisables sont intégrés dans des symboles SVG : aucune police, image ou feuille
-de style distante, aucun JavaScript. `--theme dark` et `--theme light` ajoutent
+Le SVG mesure **800 × 400**, avec un fond transparent par défaut. Les satellites
+utilisent des symboles SVG ; la Terre animée utilise une bande de pixels PNG
+embarquée dans le SVG. Aucune police, image ou feuille de style distante, aucun
+JavaScript. `--theme dark` et `--theme light` ajoutent
 un fond ; `--static` supprime toutes les animations.
 
-Les orbites sont animées en CSS, les étoiles scintillent doucement et les LED
-clignotent. Quelques paquets de communication circulent au chargement de l'image.
-La Terre reste statique. Le premier plan et l'arrière-plan sont séparés pour que
-les satellites passent autour de la Terre. `prefers-reduced-motion` désactive
+La Terre tourne sur elle-même en **96 secondes** : les continents défilent sur la
+sphère, avec un éclairage et une atmosphère fixes. Les quatre plans orbitaux sont
+inclinés sur des axes différents, comme dans une représentation d'atome. Les
+satellites alternent les sens de parcours et chaque plan conserve son propre
+premier plan et arrière-plan pour passer correctement autour du globe.
+
+Les animations utilisent uniquement du CSS. Les étoiles scintillent doucement et
+les LED clignotent. Quelques paquets de communication circulent au chargement de
+l'image. `prefers-reduced-motion` désactive
 l'animation. Aucun GIF n'est généré par ce nouveau moteur.
 
 Les SVG sont contrôlés localement dans des balises `<img>` sous Chromium et Firefox. La compatibilité dans
