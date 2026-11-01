@@ -1,0 +1,6 @@
+* text=auto eol=lf
+*.png binary
+src/renderer/assets.generated.ts linguist-generated=true
+examples/constellations/*.svg linguist-generated=true
+examples/constellations/index.html linguist-generated=true
+output/*.svg linguist-generated=true

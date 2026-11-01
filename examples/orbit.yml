@@ -1,19 +1,34 @@
-# Copy to .github/workflows/orbit.yml when git-orbit is at the repository root.
 name: Grow my constellation
+
 on:
+  push:
+    branches: [main]
+    paths:
+      - 'src/**'
+      - 'package.json'
+      - 'package-lock.json'
+      - 'tsconfig.json'
+      - 'action.yml'
+      - '.github/workflows/orbit.yml'
   schedule:
     - cron: '23 3 * * *'
   workflow_dispatch:
+
 permissions:
   contents: write
+
 concurrency:
-  group: git-orbit
+  group: git-orbit-${{ github.ref }}
   cancel-in-progress: false
+
 jobs:
   orbit:
     runs-on: ubuntu-latest
+    timeout-minutes: 15
     steps:
       - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.ref_name }}
       - uses: ./
         with:
           username: ${{ github.repository_owner }}

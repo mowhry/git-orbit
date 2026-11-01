@@ -5,7 +5,12 @@ __pycache__/
 node_modules/
 dist/
 .cache/
+.local/
 .env
 .env.*
 !.env.example
-orbit.svg
+# Only local scratch renders; output/orbit.svg must be committed by the workflow.
+/orbit.svg
+/orbit-static.svg
+*.log
+.DS_Store
