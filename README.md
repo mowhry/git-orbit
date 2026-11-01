@@ -25,7 +25,7 @@ npm run demo
 ```
 
 Ouvre [`examples/constellations/index.html`](examples/constellations/index.html)
-dans ton navigateur : débutant, actif, vétéran et progression maximale, avec
+dans ton navigateur : débutant, actif, en expansion et constellation mature, avec
 versions transparentes, sombres, claires et statiques.
 
 Pour créer un exemple sans jeton ni connexion :
@@ -81,9 +81,14 @@ fichier existant. Les diagnostics vont sur stderr.
 | Streak actuel | LED et signaux, vitesse légèrement augmentée ; aucun matériel supplémentaire |
 
 Les seuils initiaux sont 0, 50, 150, 300, 500, 750, 1000… points. La scène est
-limitée à **24 satellites et 4 orbites**. Les quatre modèles restent des CubeSats :
+limitée à **21 satellites et 4 orbites**. Les quatre modèles restent des CubeSats :
 petit cube, panneaux solaires, antenne, puis capteurs, parabole et accents dorés.
 Au plafond, le matériel continue d'évoluer jusqu'au quatrième niveau.
+
+Les quatre niveaux de la galerie montrent **1 → 8 → 14 → 21 satellites**,
+sur une, deux, trois puis quatre orbites. Le troisième niveau fait la transition
+vers la constellation mature. Même une activité extrême ne dépasse pas cette
+dernière scène. Le moteur ajoute les satellites progressivement entre ces exemples.
 
 Le score exclut les étoiles pour respecter le cahier des charges : une étoile
 GitHub devient une étoile dans le ciel. Les poids et seuils sont modifiables

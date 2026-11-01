@@ -70,7 +70,7 @@ test('untrusted labels cannot inject markup', () => {
 });
 
 test('reviewed example SVGs remain byte-identical to the renderer', async () => {
-  for (const name of ['new', 'active', 'veteran', 'extreme']) {
+  for (const name of ['new', 'active', 'growing', 'veteran', 'extreme']) {
     const metrics = JSON.parse(await readFile(`fixtures/${name}.json`, 'utf8'));
     const expected = await readFile(`examples/constellations/${name}-static.svg`, 'utf8');
     assert.equal(renderScene('mowhry', calculateOrbitState(metrics), { animation: false }), expected);

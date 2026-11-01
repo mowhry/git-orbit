@@ -48,7 +48,7 @@ function communications(satellites: Satellite[], level: number, activity: number
 
 export function renderScene(username: string, state: OrbitState, options: RenderOptions = {}): string {
   username = username.toLowerCase();
-  if (!Number.isInteger(state.satelliteCount) || state.satelliteCount < 1 || state.satelliteCount > 24
+  if (!Number.isInteger(state.satelliteCount) || state.satelliteCount < 1 || state.satelliteCount > 21
     || !Number.isInteger(state.orbitCount) || state.orbitCount < 1 || state.orbitCount > 4
     || !Number.isInteger(state.orbitCapacity) || state.orbitCapacity < 1 || state.orbitCapacity > 6
     || state.satelliteCount > state.orbitCount * state.orbitCapacity

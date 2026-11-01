@@ -1,7 +1,7 @@
 {
   "weights": { "commits": 1, "pullRequests": 5, "reviews": 3 },
-  "satelliteThresholds": [0, 50, 150, 300, 500, 750, 1000, 1350, 1800, 2400, 3100, 4000, 5100, 6400, 8000, 10000, 12500, 15500, 19000, 23000, 28000, 34000, 41000, 50000],
-  "maxSatellites": 24,
+  "satelliteThresholds": [0, 50, 150, 300, 500, 750, 1000, 1350, 1800, 2400, 3100, 4000, 5100, 6400, 8000, 10000, 12500, 15500, 19000, 23000, 28000],
+  "maxSatellites": 21,
   "satellitesPerOrbit": 6,
   "maxOrbits": 4,
   "tierScoreThresholds": [0, 1800, 12000, 60000],

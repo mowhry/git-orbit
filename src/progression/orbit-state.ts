@@ -17,8 +17,8 @@ export interface ProgressionConfig {
 export const DEFAULT_CONFIG: ProgressionConfig = {
   weights: { commits: 1, pullRequests: 5, reviews: 3 },
   satelliteThresholds: [0, 50, 150, 300, 500, 750, 1000, 1350, 1800, 2400,
-    3100, 4000, 5100, 6400, 8000, 10000, 12500, 15500, 19000, 23000, 28000, 34000, 41000, 50000],
-  maxSatellites: 24, satellitesPerOrbit: 6, maxOrbits: 4,
+    3100, 4000, 5100, 6400, 8000, 10000, 12500, 15500, 19000, 23000, 28000],
+  maxSatellites: 21, satellitesPerOrbit: 6, maxOrbits: 4,
   tierScoreThresholds: [0, 1800, 12000, 60000],
   tierPullRequestThresholds: [0, 25, 150, 750],
   starThresholds: [0, 10, 50, 100, 500, 1000],
@@ -42,9 +42,9 @@ export function validateConfig(config: ProgressionConfig): void {
     if (!Number.isFinite(n) || n < 0) throw new Error('Score weights must be finite and nonnegative.');
   }
   if (![config.maxSatellites, config.satellitesPerOrbit, config.maxOrbits].every(n => Number.isInteger(n) && n > 0)
-    || config.maxSatellites > 24 || config.maxOrbits > 4 || config.satellitesPerOrbit > 6
+    || config.maxSatellites > 21 || config.maxOrbits > 4 || config.satellitesPerOrbit > 6
     || config.maxSatellites > config.maxOrbits * config.satellitesPerOrbit) {
-    throw new Error('Layout supports up to 24 satellites, 4 orbits and 6 satellites per orbit.');
+    throw new Error('Layout supports up to 21 satellites, 4 orbits and 6 satellites per orbit.');
   }
 }
 
