@@ -1,0 +1,31 @@
+# For a repository containing this project at its root.
+# To embed it in another repo, put it in .github/orbit and change uses: ./
+# to uses: ./.github/orbit below.
+name: Grow orbital relay
+on:
+  schedule:
+    - cron: '17 3 * * *'
+  workflow_dispatch:
+permissions:
+  contents: write
+concurrency:
+  group: orbit-${{ github.ref }}
+  cancel-in-progress: false
+jobs:
+  grow:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: ./
+      - name: Commit changed station
+        shell: bash
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add -- output
+          if ! git diff --cached --quiet; then
+            git commit -m 'chore: update orbital relay'
+            git push
+          fi
