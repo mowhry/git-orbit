@@ -2,160 +2,265 @@
 
 > Build your GitHub constellation.
 
-Une petite Terre en pixel art, des CubeSats sur des orbites inclinées et un ciel
-qui grandit avec ton activité GitHub. Une constellation vivante à afficher dans
-ton README, sans serveur à héberger.
+Turn your GitHub activity into a living pixel-art constellation: a rotating Earth,
+CubeSats on tilted orbits, and a sky that grows with your projects.
+
+Embed it in your profile README and let GitHub Actions update it every day.
+No hosted service required.
 
 [![Tests](https://github.com/mowhry/git-orbit/actions/workflows/ci.yml/badge.svg)](https://github.com/mowhry/git-orbit/actions/workflows/ci.yml)
-[![Licence MIT](https://img.shields.io/badge/licence-MIT-blue.svg)](LICENSE)
+[![MIT License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 
-![Constellation Git Orbit animée](examples/constellations/active-dark.svg)
+![Animated Git Orbit constellation](examples/constellations/active-dark.svg)
 
-*Aperçu avec des données simulées. Ton pseudo et ton historique déterminent ta constellation.*
+*Preview generated from sample data. Each account gets a deterministic constellation based on its username and activity.*
 
-## L'ajouter à ton profil
+## Features
 
-### Depuis ce dépôt
+- Pixel-art Earth with a slow, 96-second rotation.
+- Up to 21 satellites across four inclined orbital planes.
+- Four CubeSat designs that evolve with contributions.
+- Repository stars become stars in the sky; reviews enable communication signals.
+- Self-contained animated SVGs, with static exports and reduced-motion support.
+- Transparent, dark, and light backgrounds.
+- Daily updates through GitHub Actions, or local generation through the CLI.
+- Persistent progress and cached data for temporary GitHub API outages.
 
-Le workflow [Grow my constellation](.github/workflows/orbit.yml) génère l'image du
-propriétaire du dépôt après un push du moteur sur `master`, puis chaque jour à
-03:23 UTC. Il peut aussi être lancé depuis **Actions → Grow my constellation →
-Run workflow**. Le jeton GitHub Actions intégré est utilisé par défaut.
+## Add it to your GitHub profile
 
-Après la première exécution réussie, ajoute ceci au README de ton profil :
+Create `.github/workflows/orbit.yml` in your profile repository
+(`YOUR-USERNAME/YOUR-USERNAME`) with the following workflow. A ready-to-copy file is
+also available in [examples/profile-workflow.yml](examples/profile-workflow.yml).
 
-```md
-![Ma constellation GitHub](https://raw.githubusercontent.com/mowhry/git-orbit/master/output/orbit.svg)
+```yaml
+name: Grow my constellation
+
+on:
+  schedule:
+    - cron: '23 3 * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: git-orbit-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  orbit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.ref_name }}
+      - uses: mowhry/git-orbit@master
+        with:
+          username: ${{ github.repository_owner }}
+          output-dir: output
+      - name: Save the constellation
+        shell: bash
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add -- output/orbit.svg output/orbit-static.svg output/.orbit-state
+          if ! git diff --cached --quiet; then
+            git commit -m 'chore: grow my constellation'
+            git push
+          fi
 ```
 
-Pour une image sans mouvement, utilise `orbit-static.svg`. Le dépôt doit être
-public pour que cette URL d'image soit accessible sur un profil public.
+Open **Actions → Grow my constellation → Run workflow** to generate the first
+image. Once the workflow succeeds, add this to your profile README:
 
-Le [guide de publication](docs/PUBLISH.md) détaille le push, la génération et
-l'intégration dans **mowhry/mowhry**.
+```md
+![My GitHub constellation](output/orbit.svg)
+```
 
-### Générer directement dans ton dépôt de profil
+The workflow then updates the image daily at 03:23 UTC. It uses the built-in
+`GITHUB_TOKEN` by default; no personal token is needed for public activity.
 
-1. Copie [examples/profile-workflow.yml](examples/profile-workflow.yml) vers
-   `.github/workflows/orbit.yml` dans ton dépôt de profil (`TON-PSEUDO/TON-PSEUDO`).
-2. Lance **Grow my constellation** une fois dans l'onglet **Actions**.
-3. Ajoute `![Ma constellation GitHub](output/orbit.svg)` à ton README.
+For a still image, use `output/orbit-static.svg` instead. Keep
+`output/.orbit-state/` in your repository to preserve earned progress across runs.
 
-Ce workflow utilise `mowhry/git-orbit@master`. Choisis un seul emplacement de
-génération pour éviter deux workflows quotidiens pour la même constellation.
+## A constellation that grows
 
-## Quatre étapes de vie
-
-| Premier satellite | Constellation active |
+| First satellite | Active constellation |
 | :---: | :---: |
-| ![Niveau 1](examples/constellations/new-dark.svg) | ![Niveau 2](examples/constellations/active-dark.svg) |
+| ![First satellite](examples/constellations/new-dark.svg) | ![Active constellation](examples/constellations/active-dark.svg) |
 | **1 satellite** | **8 satellites** |
 
-| En expansion | Constellation mature |
+| Expanding constellation | Mature constellation |
 | :---: | :---: |
-| ![Niveau 3](examples/constellations/growing-dark.svg) | ![Niveau 4](examples/constellations/veteran-dark.svg) |
+| ![Expanding constellation](examples/constellations/growing-dark.svg) | ![Mature constellation](examples/constellations/veteran-dark.svg) |
 | **14 satellites** | **21 satellites maximum** |
 
-Ces scènes illustrent la progression ; le moteur ajoute les satellites
-progressivement entre les exemples. Au plafond, l'activité améliore le matériel
-sans multiplier les objets. La Terre tourne en 96 secondes, et les quatre plans
-orbitaux alternent les sens de rotation.
+These examples illustrate the progression. Satellites unlock gradually between
+milestones, and further activity upgrades existing hardware after the count reaches
+its limit.
 
-| Activité GitHub | Effet visible |
+| GitHub activity | Visual effect |
 | --- | --- |
-| Commits cumulés | Croissance de la constellation : 1 point par commit |
-| Pull requests | 5 points et modèles de satellite plus avancés |
-| Reviews | 3 points et petits échanges lumineux |
-| Étoiles reçues | Étoiles dans le ciel, jamais de satellites supplémentaires |
-| Streak actuel | LED, signaux et légère variation de vitesse |
+| Commits | Main source of growth: 1 point per commit |
+| Pull requests | 5 points each, plus more advanced satellite designs |
+| Code reviews | 3 points each, plus brief communication signals |
+| Stars received | A richer star field, without adding satellites |
+| Current streak | Brighter LEDs, radio signals, and slightly faster movement |
 
-L'inactivité ne retire pas les satellites acquis. Le même pseudo, le même état et
-la même version produisent exactement le même SVG.
+Quiet periods do not remove earned satellites. The same username, visual state,
+and engine version produce identical SVG bytes.
 
-## Essayer en local
+## Run locally
 
-Node.js **22 ou supérieur** et npm sont nécessaires.
+Requires **Node.js 22 or later** and npm.
 
 ```sh
 git clone https://github.com/mowhry/git-orbit.git
 cd git-orbit
 npm ci
-npm run generate -- mowhry --demo --output orbit.svg
+npm run generate -- your-username --demo --output orbit.svg
 ```
 
-`--demo` utilise des données simulées. Pour ton historique réel, définis
-`GITHUB_TOKEN` ou `GH_TOKEN` dans ton environnement, puis :
+`--demo` uses sample activity and works without a token or network connection.
+To use real GitHub activity, set `GITHUB_TOKEN` or `GH_TOKEN` in your environment,
+then omit `--demo`:
 
 ```sh
-npm run generate -- mowhry --output orbit.svg
+npm run generate -- your-username --output orbit.svg
 ```
 
-Quelques variantes :
+Additional examples:
 
 ```sh
-npm run generate -- mowhry --demo --theme dark --output orbit.svg
-npm run generate -- mowhry --demo --static --output orbit-static.svg
-npm run demo          # galerie complète dans examples/constellations/index.html
-npm test
+# Dark background or static export.
+npm run generate -- your-username --demo --theme dark --output orbit.svg
+npm run generate -- your-username --demo --static --output orbit-static.svg
+
+# Render saved activity without contacting GitHub.
+npm run generate -- your-username --fixture fixtures/growing.json --output orbit.svg
+
+# Generate all examples and open examples/constellations/index.html locally.
+npm run demo
+
+# After building, write only SVG to stdout.
+node dist/src/cli.js your-username --demo > orbit.svg
+node dist/src/cli.js --help
 ```
 
-La CLI, l'endpoint HTTP, le cache et la personnalisation sont décrits dans
-[docs/USAGE.md](docs/USAGE.md).
+The CLI writes diagnostics to stderr. GitHub failures return a nonzero exit code;
+when using `--output`, an existing image is preserved.
 
-## Paramètres de l'action
+## GitHub Action inputs
 
-| Entrée | Par défaut | Rôle |
+| Input | Default | Description |
 | --- | --- | --- |
-| `username` | Propriétaire du dépôt | Compte GitHub à représenter |
-| `github-token` | Jeton intégré du workflow | Lire l'API GitHub |
-| `output-dir` | `output` | Dossier des SVG et de l'historique |
-| `theme` | `transparent` | `transparent`, `dark` ou `light` |
+| `username` | Repository owner | GitHub account to render |
+| `github-token` | `${{ github.token }}` | Token used to read the GitHub API |
+| `output-dir` | `output` | Destination for images and persistent activity data |
+| `theme` | `transparent` | `transparent`, `dark`, or `light` |
 
-L'action génère `orbit.svg`, `orbit-static.svg` et `.orbit-state/<pseudo>.json`.
-Le workflow enregistre ces fichiers dans Git ; l'action seule ne fait pas de push.
-Conserve `.orbit-state/` pour préserver la progression entre les exécutions.
-Aucun jeton n'est écrit dans ces fichiers.
-
-## Format et données
-
-Les SVG mesurent **800 × 400** et embarquent tous leurs assets. Les satellites
-utilisent des symboles SVG ; la rotation terrestre utilise une bande PNG intégrée.
-Aucun JavaScript n'est exécuté dans l'image. La réduction des mouvements est
-respectée et une version statique est fournie. Les animations sont vérifiées
-localement dans Chromium et Firefox.
-
-La collecte parcourt les contributions reconnues par GitHub depuis la création du
-compte et les étoiles de ses dépôts publics. Les contributions privées dépendent
-des autorisations du jeton et de la visibilité du profil. Les organisations ne
-sont pas prises en charge. Les tests API utilisent des réponses simulées ; le
-workflow publié permet de vérifier la collecte authentifiée.
-
-Le cache des images GitHub peut retarder l'affichage d'une mise à jour. Voir la
-[documentation du proxy d'images GitHub](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/about-anonymized-urls).
-
-## Développement
-
-Le moteur n'a aucune dépendance d'exécution. TypeScript, les types Node et la
-compression PNG déterministe servent uniquement à construire le projet.
-
-Consulte [CONTRIBUTING.md](CONTRIBUTING.md) pour les tests et la régénération des
-assets, et [CHANGELOG.md](CHANGELOG.md) pour les versions.
+The action generates:
 
 ```text
-src/github/        collecte, normalisation, cache
-src/progression/   activité → état visuel
-src/renderer/      Terre, satellites, orbites, étoiles → SVG
-assets/            dessins et animation terrestre
-fixtures/          données de démonstration
-examples/          galerie et workflows à copier
-tests/             tests de progression, rendu, API, cache et CLI
+output/
+├── orbit.svg
+├── orbit-static.svg
+└── .orbit-state/
+    └── your-username.json
 ```
 
-## Inspirations et licence
+The action renders files; the example workflow commits them. Activity snapshots
+contain aggregate metrics and a fetch timestamp, never the token.
 
-Inspiré de [git-bonsai](https://github.com/egorthinks/git-bonsai) et
-[git-koi](https://github.com/yalongwastaken/git-koi). Les dessins et le moteur de
-constellation sont propres à Git Orbit. Le [cahier des charges](docs/vision.md)
-conserve la vision d'origine ; le README décrit la version actuelle.
+## Customization
 
-Licence [MIT](LICENSE) — © 2026 mowhry.
+Use `--theme transparent`, `--theme dark`, or `--theme light` to choose a background.
+Use `--static` to disable all animation.
+
+Scoring weights, unlock thresholds, and effect levels can be adjusted without
+changing the renderer:
+
+```sh
+node dist/src/cli.js your-username --demo \
+  --config examples/progression.json --output orbit.svg
+```
+
+See [examples/progression.json](examples/progression.json) for the available
+settings. The layout supports a maximum of 21 satellites and four orbits.
+
+## Optional HTTP endpoint
+
+```sh
+npm start
+```
+
+- Sample data: `http://127.0.0.1:3000/api/demo?username=your-username`
+- GitHub activity: `http://127.0.0.1:3000/api/orbit?username=your-username`
+- Options: `&theme=dark&animation=false`
+
+Real activity requires `GITHUB_TOKEN` or `GH_TOKEN`. Configure `HOST`, `PORT`, and
+`ORBIT_CACHE_DIR` through the environment. An optional local configuration template
+is provided in [.env.example](.env.example).
+
+The server binds to `127.0.0.1:3000` by default. Using its URL in a GitHub README
+requires deploying it to a publicly accessible host. The GitHub Actions workflow
+works without running this server.
+
+## Rendering and data
+
+Images are **800 × 400** and contain all required assets. Satellites use reusable
+SVG symbols; Earth uses an embedded PNG frame strip. Animation runs entirely in
+CSS, with no scripts or external resources inside the image. Animated images have
+been checked in Chromium and Firefox, and respect `prefers-reduced-motion`.
+
+Activity is collected through GitHub GraphQL, year by year from account creation.
+Commit, pull request, and review counts follow GitHub's contribution rules. Stars
+are collected from public repositories owned by the account. Private contributions
+depend on token permissions and profile visibility. Organization accounts are not
+currently supported.
+
+Activity is cached for 30 minutes. Temporary API failures and rate limits fall
+back to the last cached snapshot when available. Stored contribution totals retain
+earned hardware if data visibility changes.
+
+GitHub's image proxy may delay visible updates. See
+[GitHub's image caching documentation](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/about-anonymized-urls).
+
+## Development
+
+The renderer has no runtime dependencies. TypeScript, Node types, and the pinned
+JavaScript PNG compressor are build-time dependencies.
+
+```sh
+npm ci
+npm test
+npm run assets             # Regenerate artwork and the embedded asset module.
+npm run demo               # Rebuild the example gallery.
+npm run verify:generated   # Check generated files against committed versions.
+```
+
+```text
+src/github/        GitHub collection, normalization, and caching
+src/progression/   Activity-to-visual-state mapping
+src/renderer/      Earth, satellites, orbits, stars, and SVG output
+assets/            Pixel artwork and Earth animation frames
+fixtures/          Sample activity data
+examples/          Generated scenes and workflow templates
+tests/             Progression, rendering, API, cache, CLI, and repository tests
+```
+
+Tests use mocked GitHub responses and do not require credentials. Generated assets
+and examples are committed so changes can be reviewed visually. See
+[CONTRIBUTING.md](CONTRIBUTING.md) for contribution guidelines and
+[CHANGELOG.md](CHANGELOG.md) for release notes.
+
+## Acknowledgments
+
+Inspired by [git-bonsai](https://github.com/egorthinks/git-bonsai) and
+[git-koi](https://github.com/yalongwastaken/git-koi). Git Orbit's constellation engine
+and artwork are original to this project.
+
+## License
+
+[MIT](LICENSE).
