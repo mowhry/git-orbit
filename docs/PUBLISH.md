@@ -1,22 +1,22 @@
 # Publier git-orbit et l'afficher sur le profil mowhry
 
 Le dépôt local est prêt pour `https://github.com/mowhry/git-orbit` : branche
-`main`, historique de commits, remote `origin`, licence MIT et workflows inclus.
+`master`, historique de commits, remote `origin`, licence MIT et workflows inclus.
 Le projet est autonome : ni les dépôts de référence ni les prototypes locaux
 ne sont nécessaires pour le compiler.
 
-## 1. Créer le dépôt distant
+## 1. Vérifier le dépôt distant
 
-Sur GitHub, crée un dépôt **public** nommé **git-orbit** sous le compte **mowhry**.
-Laisse-le vide : ne coche pas l'ajout d'un README, d'une licence ou d'un gitignore,
-puisque ces fichiers et l'historique existent déjà ici.
+Le dépôt cible est **mowhry/git-orbit**. Pour afficher directement ses images
+sur ton profil public, rends ce dépôt public dans ses paramètres GitHub.
+Si tu réutilises le projet sous un autre nom, adapte le remote et les URL ci-dessous.
 
 ## 2. Envoyer le projet
 
 Depuis ce dossier :
 
 ```sh
-git push -u origin main
+git push -u origin master
 ```
 
 Utilise ton authentification GitHub habituelle. Si ton compte ou le nom du dépôt
@@ -28,7 +28,7 @@ git remote set-url origin https://github.com/TON-PSEUDO/git-orbit.git
 
 ## 3. Attendre la génération
 
-Le premier push sur `main` lance deux workflows dans l'onglet **Actions** :
+Le premier push sur `master` lance deux workflows dans l'onglet **Actions** :
 
 - **Test Git Orbit** : compilation, tests et vérification des assets.
 - **Grow my constellation** : collecte de ton historique GitHub et génération
@@ -40,7 +40,7 @@ Le jeton intégré de GitHub Actions est utilisé ; aucun secret personnel n'est
 nécessaire pour ce parcours avec les données publiques.
 
 Si le push automatique est refusé, vérifie que le workflow dispose de
-`contents: write` et que les règles du dépôt autorisent ce commit sur `main`.
+`contents: write` et que les règles du dépôt autorisent ce commit sur `master`.
 Une exécution authentifiée ne peut être vérifiée qu'après cette publication.
 
 Après le commit automatique, synchronise ta copie locale avant de continuer
@@ -55,7 +55,7 @@ git pull --ff-only
 Dans le `README.md` de **mowhry/mowhry**, ajoute :
 
 ```md
-![Ma constellation GitHub](https://raw.githubusercontent.com/mowhry/git-orbit/main/output/orbit.svg)
+![Ma constellation GitHub](https://raw.githubusercontent.com/mowhry/git-orbit/master/output/orbit.svg)
 ```
 
 Ou, pour centrer l'image et choisir sa largeur :
@@ -63,7 +63,7 @@ Ou, pour centrer l'image et choisir sa largeur :
 ```html
 <p align="center">
   <a href="https://github.com/mowhry/git-orbit">
-    <img src="https://raw.githubusercontent.com/mowhry/git-orbit/main/output/orbit.svg"
+    <img src="https://raw.githubusercontent.com/mowhry/git-orbit/master/output/orbit.svg"
          width="800" alt="Ma constellation GitHub" />
   </a>
 </p>
@@ -89,7 +89,7 @@ puis utilise un chemin local dans le README :
 ```
 
 Choisis un seul de ces deux emplacements de génération. Le workflow d'exemple
-utilise `mowhry/git-orbit@main`, sans dépendre d'un tag qui n'existe pas encore.
+utilise `mowhry/git-orbit@master`, sans dépendre d'un tag qui n'existe pas encore.
 
 ## Repères GitHub
 

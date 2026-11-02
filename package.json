@@ -5,13 +5,29 @@
   "description": "A deterministic pixel-art constellation grown from your GitHub history",
   "license": "MIT",
   "author": "mowhry",
-  "repository": { "type": "git", "url": "https://github.com/mowhry/git-orbit.git" },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/mowhry/git-orbit.git"
+  },
   "homepage": "https://github.com/mowhry/git-orbit#readme",
-  "bugs": { "url": "https://github.com/mowhry/git-orbit/issues" },
-  "keywords": ["github-action", "profile-readme", "pixel-art", "svg", "satellites", "procedural-generation"],
+  "bugs": {
+    "url": "https://github.com/mowhry/git-orbit/issues"
+  },
+  "keywords": [
+    "github-action",
+    "profile-readme",
+    "pixel-art",
+    "svg",
+    "satellites",
+    "procedural-generation"
+  ],
   "type": "module",
-  "engines": { "node": ">=22" },
-  "bin": { "git-orbit": "dist/src/cli.js" },
+  "engines": {
+    "node": ">=22"
+  },
+  "bin": {
+    "git-orbit": "dist/src/cli.js"
+  },
   "exports": "./dist/src/index.js",
   "types": "./dist/src/index.d.ts",
   "scripts": {
@@ -20,7 +36,12 @@
     "demo": "npm run build --silent && node dist/scripts/examples.js",
     "start": "npm run build --silent && node dist/src/server.js",
     "test": "npm run build --silent && node --test dist/tests/*.test.js",
-    "assets": "node scripts/build-assets.mjs"
+    "assets": "node scripts/build-assets.mjs",
+    "verify:generated": "node scripts/verify-generated.mjs"
   },
-  "devDependencies": { "@types/node": "22.10.2", "typescript": "5.7.3" }
+  "devDependencies": {
+    "@types/node": "22.10.2",
+    "fflate": "0.8.3",
+    "typescript": "5.7.3"
+  }
 }

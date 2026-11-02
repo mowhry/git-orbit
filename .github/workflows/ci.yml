@@ -16,8 +16,5 @@ jobs:
           cache: npm
       - run: npm ci --ignore-scripts
       - run: npm test
-      - run: npm run demo
       - name: Check reproducible assets and examples
-        run: |
-          npm run assets
-          git diff --exit-code -- assets/earth assets/satellites assets/effects src/renderer/assets.generated.ts examples/constellations
+        run: npm run verify:generated

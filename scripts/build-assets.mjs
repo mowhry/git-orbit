@@ -1,7 +1,8 @@
 // Code-native artwork: integer pixels, fixed palette, no image service at runtime.
 import { mkdir, writeFile } from 'node:fs/promises';
 import { fileURLToPath } from 'node:url';
-import { deflateSync } from 'node:zlib';
+// Pin the JavaScript compressor: native zlib and zlib-ng produce different bytes.
+import { zlibSync } from 'fflate';
 const root = fileURLToPath(new URL('../', import.meta.url));
 const definitions = [];
 async function asset(path, id, width, height, body) {
@@ -103,7 +104,7 @@ const paletteBytes=Buffer.from([...palette.keys()].flatMap(color=>color
   ? [1,3,5].map(offset=>parseInt(color.slice(offset,offset+2),16)) : [0,0,0]));
 const png=Buffer.concat([Buffer.from([137,80,78,71,13,10,26,10]),chunk('IHDR',header),
   chunk('PLTE',paletteBytes),chunk('tRNS',Buffer.from([0])),
-  chunk('IDAT',deflateSync(scanlines,{level:9})),chunk('IEND',Buffer.alloc(0))]);
+  chunk('IDAT',zlibSync(scanlines,{level:9})),chunk('IEND',Buffer.alloc(0))]);
 await writeFile(`${root}assets/earth/rotation.png`,png);
 const earthRotation={dataUri:`data:image/png;base64,${png.toString('base64')}`,
   frameCount:earthFrameCount,frameSize:earthFrameSize,duration:earthDuration};

@@ -61,7 +61,9 @@ test('animated SVG is self-contained and lightweight even at the cap', () => {
   assert.doesNotMatch(svg, /<script|foreignObject|(?:href|src)="https?:/);
   assert.match(svg, /prefers-reduced-motion/);
   assert.ok(Buffer.byteLength(svg) < 210000, `SVG too large: ${Buffer.byteLength(svg)}`);
-  assert.doesNotMatch(svg, /NaN|Infinity|undefined/);
+  // Binary base64 can contain the letters "NaN" without a malformed SVG number.
+  const markup = svg.replace(/data:image\/png;base64,[A-Za-z0-9+/=]+/g, '');
+  assert.doesNotMatch(markup, /NaN|Infinity|undefined/);
 });
 test('untrusted labels cannot inject markup', () => {
   const name = '<script>alert("x")</script>';

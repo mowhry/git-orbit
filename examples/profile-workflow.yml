@@ -21,7 +21,7 @@ jobs:
       - uses: actions/checkout@v4
         with:
           ref: ${{ github.ref_name }}
-      - uses: mowhry/git-orbit@main
+      - uses: mowhry/git-orbit@master
         with:
           username: ${{ github.repository_owner }}
           output-dir: output

@@ -29,6 +29,7 @@ modification des assets :
 npm run assets
 npm run demo
 npm test
+npm run verify:generated # après avoir commité les fichiers générés
 ```
 
 Inclus les SVG, le PNG de rotation, `src/renderer/assets.generated.ts` et les
@@ -47,3 +48,7 @@ supplémentaire doit répondre à un besoin concret.
 La CI vérifie les tests et la reproductibilité des assets. Les fichiers de
 `output/` sont produits par le workflow du propriétaire du dépôt ; les scènes
 de démonstration vivent dans `examples/constellations/`.
+
+La compression PNG utilise `fflate`, verrouillé dans `package-lock.json` : les
+compressions natives de Node peuvent différer entre zlib et zlib-ng. Cette
+dépendance sert uniquement à fabriquer les assets, pas à exécuter le moteur.

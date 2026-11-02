@@ -1,7 +1,7 @@
 # Constellation générée
 
 Le workflow **Grow my constellation** remplit ce dossier avec les données GitHub
-du propriétaire du dépôt après le premier push sur `main`, puis chaque jour.
+du propriétaire du dépôt après le premier push sur `master`, puis chaque jour.
 
 | Fichier | Contenu |
 | --- | --- |
